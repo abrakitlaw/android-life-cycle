@@ -2,6 +2,14 @@
 Android is designed to empower users and let them use apps in a intuitive way so we should know how to manage component lifecycles. A component can be an Activity, Fragment, Service, Application itself and even underlying process. The component has lifecycle, during which it transations through states. Whenever transation happens, the system notifies you via lifecycle callback method.
 
 ## Activity 
+- onCreate() = called when an activity first created; when a user opens the app
+- onStart() = called when an activity becomes visible to the user
+- onResume() = called when a user starts interacting with the application
+- onPause() = when activity is paused and receiving other activities in onResume method
+- onStop() = called when activity is no longer visible to the user; when a user minimizes the app
+- onDestroy() = called when activity destroyed; when the users clear the application stack
+- onRestart() = called when activity restarts
+
 ### Scenario 1: App is finished and restarted
 Triggered by:
  - Pressed Back Button, or 
@@ -104,6 +112,21 @@ Managing state:
 - Note that the state of the full back stack is saved but, in order to efficiently use resources, activities are only restored when they are recreated.
 
 ## Fragment
+When fragment come up on the screen:
+- onAttach() = to know that our fragment has been attached to an activity. We are passing the activity that will host our fragment
+- onCreate() = fragment instance initializes, just after the onAttach where fragment attaches to the host activity
+- onCreateView() = time for the fragment to draw its user interface for the first time.
+- onActivityCreated() = activity completes its onCreate() methid
+- onStart() = this method called when a fragment is visible
+- onResume() = fragment is visible and following the user to interact with it. Fragment resumes only after activity resumes.
+
+When fragment goes out off the screen:
+- onPause() = when fragment is not allowing the user to interact; the fragment will get change with other fragment or it gets removed from activity or fragment’s activity called a pause.
+- onStop() = when fragment is no longer visible; the fragment will get change with other fragment or it gets removed from activity or fragment’s activity called stop.
+- onDestroyView() = when view and related resources created in onCreateView are removed from the activity's view hirarchy and destroyed.
+- onDestroy() = when fragment does its final clean up
+- onDetach() = when fragment is detached from its host activity
+
 ### Scenario 1 - Activity with Fragments starts and finishes
 1. [App started]
 - (Activity 1) - onCreate()
