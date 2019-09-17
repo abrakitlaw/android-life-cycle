@@ -102,3 +102,53 @@ Managing state:
   
 Managing state:
 - Note that the state of the full back stack is saved but, in order to efficiently use resources, activities are only restored when they are recreated.
+
+## Fragment
+### Scenario 1 - Activity with Fragments starts and finishes
+1. [App started]
+- (Activity 1) - onCreate()
+- (Fragment 1) - onAttach() -> onCreate() -> onCreateView(null) -> onActivityCreated(null)
+- (Activity 1 and Fragment 1) - onStart()
+- (Activity 1 and Fragment 1) - onResume()
+
+2. [Back pressed]
+- (Activity 1 and Fragment 1) - onPause()
+- (Activity 1 and Fragment 1) - onStop()
+- (Activity 1) - onDestroy()
+- (Fragment 1) - onDestroyView() -> onDestroy() -> onDetach()
+
+### Scenario 2 - Activity with Fragments is rotated
+1. [Activity and Fragment are in RESUMED state]
+2. [Device is rotated]
+- (Activity 1 and Fragment 1) - onPause()
+- (Activity 1 and Fragment 1) - onStop()
+- (Activity 1 and Fragment 1) - onSaveInstanceState()
+- (Activity 1) - onDestroy() 
+- (Fragment 1) - onDestroyView() -> onDestroy() -> onDetach()
+- (Activity 1) - onCreate(Bundle)
+- (Fragment 1) - onAttach() -> onCreate(Bundle) -> onCreateView(Bundle)
+- (Fragment 1) - onActivityCreated(Bundle)
+- (Activity 1 and Fragment 1) - onStart()
+- (Activity 1) - onRestoreInstanceState()
+- (Activity 1 and Fragment 1) - onResume()
+
+State management:
+- Fragment state is saved and restored in very similar fashion to activity state. The difference is that there's no onRestoreInstanceState in fragments, but the Bundle is available in the fragment's onCreate, onCreateView and onActivityCreated
+
+### Scenario 3 - Activity with retained fragment  is rotated
+1. [Activity and Fragment are in RESUMED state]
+2. [Device is rotated]
+- (Activity 1 and Fragment 1) - onPause()
+- (Activity 1 and Fragment 1) - onStop()
+- (Activity 1 and Fragment 1) - onSaveInstanceState()
+- (Activity 1) - onDestroy() 
+- (Fragment 1) - onDestroyView() -> onDetach()
+- (Activity 1) - onCreate(Bundle)
+- (Fragment 1) - onAttach() -> onCreateView(Bundle)
+- (Fragment 1) - onActivityCreated(Bundle)
+- (Activity 1 and Fragment 1) - onStart()
+- (Activity 1) - onRestoreInstanceState()
+- (Activity 1 and Fragment 1) - onResume()
+
+State management:
+- Fragment is not destroyed nor created after the rotation because the same fragment instance is used after the activity is recreated. State bundle is still available in onActivityCreated. Using retained fragments is not recommended unless they are used to store data across configuration changes (in a non-UI fragment)
